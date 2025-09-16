@@ -3,9 +3,9 @@
 function siteWrapperPlugin(hook, vm) {
   const footer = [
     '<footer style="text-align: center; padding-top: 40px;">',
-    'Karlo-Hosting &copy; 2025',
+    'TOLERANT Software &copy; 2025',
     "<br/>",
-    'Made with <span style="color: lightcoral">❤</span> by <a href="https://github.com/Karlo-Hosting" target="_blank">@Karlo-Hosting</a> and <a href="https://github.com/Karlo-Hosting/Docs/graphs/contributors" target="_blank">Helpers</a>',
+    'Made with <span style="color: lightcoral">❤</span> by <a href="https://github.com/tolerantsoftware" target="_blank">TOLERANT Software</a> and <a href="https://github.com/tolerantsoftware/Docs/graphs/contributors" target="_blank">Helpers</a>',
     "</footer>",
   ].join("");
 
@@ -27,7 +27,7 @@ function siteWrapperPlugin(hook, vm) {
         .replace('@master', '/blob/master');
     } else {
       url =
-        'https://github.com/Karlo-Hosting/Docs/blob/main/' +
+        'https://github.com/tolerantsoftware/Docs/blob/main/' +
         vm.route.file;
     }
 

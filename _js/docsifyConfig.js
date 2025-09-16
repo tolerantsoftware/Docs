@@ -1,7 +1,7 @@
 window.$docsify = {
     catchPluginErrors: true,
-    name: 'Karloline-Hosting Documentation',
-    repo: 'https://github.com/Karlo-Hosting/Docs/',
+    name: 'TOLERANT Software Product Documentation',
+    repo: 'https://github.com/tolerantsoftware/Docs/',
     routerMode: 'histroy',
     auto2top: true,
     loadSidebar: true,

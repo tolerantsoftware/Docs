@@ -1,6 +1,6 @@
 :root {
-  --primary: #66cc8a;
-  --secondary: #377cfb;
+  --primary: rgb(0, 72, 189);
+  --secondary: #66cc8a;
   --accent: #f68067;
   --neutral: #333c4d;
   --neutral-content: #f9fafb;
