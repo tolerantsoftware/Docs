@@ -14,8 +14,6 @@ TOLERANT Post ermöglicht dabei folgende Funktionen:
 - Begrenzt die Länge einzelner Anschriftenelemente durch "korrekte" Abkürzung
 - Ermittelt Adressen innerhalb eines vorgegebenen Radius um einen gegebenen Geocode
 
-#### KAPITEL 4. KONZEPTE **TOLERANT** Software
-
 Bei der eigentlichen Anschriftenprüfung werden die zuvor strukturierten Daten mit den postalischen Referenzdaten verglichen.
 
 Dabei wird überprüft, ob die einzelnen Elemente existieren und ob sie in ihrer Kombination richtig und sinnvoll sind.
@@ -31,7 +29,7 @@ Folgende Features werden bei der Adressvalidierung unterstützt:
 - Korrekturmodus, in dem Anschriften automatisch bearbeitet werden.
 - <span id="page-15-0"></span>— Vorschlagsmodus, in dem Vorschläge bei mehrdeutigen Anschriften präsentiert werden.
 
-## **4.1 REFERENZDATEN**
+## REFERENZDATEN
 
 Die nachfolgende Auflistung bezieht sich auf Version 5 und Version 6 der Adressvalidierungs-Engine.
 
@@ -90,8 +88,6 @@ Das umgekehrte Geocoding (GEOCODETOADDRESS) liefert eine Liste von Adressen, die
 #### Zerlegen (PARSE)
 
 Der Zerlegen Modus (PARSE) versucht die eingegebene Adresse in ihre einzelnen Adresselemente aufzuspalten. Bei unbekannten Adressen im (BATCH) Modus tritt per Default der (PARSE) Modus in Kraft und versucht die Adresse zu zerlegen.
-
-#### KAPITEL 4. KONZEPTE **TOLERANT** Software
 
 #### ZUSÄTZLICHE INFORMATIONEN ANREICHERN
 

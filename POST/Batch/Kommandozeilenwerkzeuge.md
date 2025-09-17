@@ -44,7 +44,7 @@ Tabelle 12.1: Bedeutung der Returncodes in den Kommandozeilenwerkzeugen
 | 13   | Nicht alle Zeilen der Eingabe wurden erfolgreich verarbeitet (Stapelverarbeitung) |  |
 |      |                                                                                   |  |
 
-## <span id="page-155-0"></span>**12.1 TOLERANT LIZENZ ÜBERPREUFEN**
+## Tolerant Lizenz Überprüfen
 
 Mit dem Kommandozeilenwerkzeug postLicense.sh/bat kann man eine vorliegende Lizenzdatei auf Validität und Inhalt prüfen, bevor POST Batch gestartet wird.
 

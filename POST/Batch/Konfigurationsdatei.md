@@ -1,9 +1,6 @@
+# Konfigurationsdatei
 
-**8**
-
-## **Konfigurationsdatei**
-
-<span id="page-62-0"></span>Die Konfiguration von POST Batch wird in einer XML Datei abgelegt. Der logische Aufbau der Datei entspricht einer Baumstruktur und ist hierarchisch organisiert. Die XML-Datei beinhaltet folgende Teile:
+Die Konfiguration von POST Batch wird in einer XML Datei abgelegt. Der logische Aufbau der Datei entspricht einer Baumstruktur und ist hierarchisch organisiert. Die XML-Datei beinhaltet folgende Teile:
 
 - *Elemente*, deren Auszeichnung mittels eines passenden Paars aus Start-Tag (<tag>) und Ende-Tag (</tag>) erfolgen kann
 - *Attribute*, die an ein Start-Tag angehängt werden (Attribut-Name="Attribut-Wert"). Sie dienen als Zusatzinformationen der Elemente.
@@ -11,35 +8,45 @@
 
 Beachten Sie folgendes: Der Kopfbereich der XML Datei fängt immer mit dem gleichen Text an:
 
+```xml
+<?xml version="1.0" encoding="UTF -8"?>
+<!DOCTYPE configuration SYSTEM "config.dtd" >
 ```
-1 <?xml version="1.0" encoding="UTF -8"?>
-2 <!DOCTYPE configuration SYSTEM "config.dtd" >
-```
 
-<span id="page-62-1"></span>Die Konfigurationsdatei muss gemäß der Document Type Definition (DTD), die in der Datei doc/config.dtd hinterlegt ist, definiert sein. Der in der XML-Datei angegebene Pfad zur der DTD-Datei ist für POST Batch unerheblich. Die DTD beschreibt die Struktur und Reihenfolge der Tags innerhalb der XML Datei.
+Die Konfigurationsdatei muss gemäß der Document Type Definition (DTD), die in der Datei doc/config.dtd hinterlegt ist, definiert sein. Der in der XML-Datei angegebene Pfad zur der DTD-Datei ist für POST Batch unerheblich. Die DTD beschreibt die Struktur und Reihenfolge der Tags innerhalb der XML Datei.
 
-## **8.1 KONVENTIONEN**
+## Konventionen
 
-#### IDENTIFIER/REFERENZEN
+### Identifier/Referenzen
 
 In der Konfiguration haben viele Elemente (*tags*) ein Attribut *id*, das als Identifier dient. Dieser Identifier muss innerhalb des umschließenden Elements eindeutig sein. Wird das Element von einem anderen Element referenziert, so geschieht dies mittels eines Attributes, das auf *Ref* endet und als Wert den Identifier enthält. Ein Beispiel:
 
-```
-1 <csvFileInput id="csvInput -1" filepath="$TLDATA/data.txt" separator ="|"
-2 codepage="ISO -8859 -1" escape="\" startline ="2" >
-3 ...
-4 </ csvFileInput >
-5
-6 <inputFieldmap id="inputFieldmap -1">
-7 <inputFieldmapItem id="item -1" inputRef="csvFileInput -1" ...
-8 </ inputFieldmap >
+```xml
+<csvFileInput
+  id="csvInput -1"
+  filepath="$TLDATA/data.txt"
+  separator ="|"
+  codepage="ISO -8859 -1"
+  escape="\"
+  startline ="2"
+  [...]
+  >
+</csvFileInput>
+
+<inputFieldmap id="inputFieldmap -1">
+  <inputFieldmapItem
+    id="item -1"
+    inputRef="csvFileInput -1"
+    [...]
+  >
+</inputFieldmap>
 ```
 
 Hier wird ein <csvFileInput>-Element mit dem Identifier "csvFileInput-1" definiert.
 
 Soll auf dieses verwiesen werden, bspw. in einem <inputFieldmapItem>-Element, so wird als Attribut inputRef="csvFileInput-1" verwendet. Damit wird definiert, dass das Element <inputFieldmapItem> als Eingabedatei die in dem Element <csvFileInput> mit der *id* "csvFileInput-1" definierte Datei verwenden soll.
 
-#### DATEINAMEN
+### DATEINAMEN
 
 Werden Dateinamen in der Konfiguration angegeben, so können diese absolute oder relative Pfade beinhalten.
 
@@ -51,11 +58,11 @@ Will man auf Dateien zugreifen, die im Installationsverzeichnis von POST Batch l
 
 Andere Systemumgebungsvariablen (Environmentvariablen, etc.) können in der Konfigurationsdatei ebenfalls verwendet werden, wobei unabhängig vom Betriebssystem immer \$ als Präfix verwendet werden muss.
 
-#### VERSIONIERUNG
+### VERSIONIERUNG
 
 Die XML-Dateien haben eine Versionsnummer, die angibt, mit welcher Produktversion eine XML-Datei kompatibel ist. Diese Nummer ist als Attribut des umschließenden Tags <configuration> angegeben und heißt version. Dies ist keine Versionsnummer für die Konfiguration an sich, sondern nur eine produktinterne Nummer für die Syntax der Konfigurationsdatei. Bitte verändern Sie diese nicht.
 
-#### DATEI postBatchExample.xml
+### DATEI postBatchExample.xml
 
 Bei der Auslieferung erhalten Sie eine Schablone, die ein Gerüst und genaue Erläuterungen für eine Konfigurationsdatei vorgibt. Sie ist in der Datei templ\_post\_batch.xml hinterlegt. Sie finden das komplette Beispiel im config/templates Verzeichnis Ihrer Installation. Die Einstellungen lassen sich mit einem einfachen Texteditor verändern.
 
@@ -83,11 +90,9 @@ l) Bedeutung und Zuweisungen der Ausgabefelder
 
 Jeder Abschnitt wird nun im Folgenden getrennt betrachtet, wobei am Ende eines jeden Abschnitts ein kleines Codebeispiel angehängt ist.
 
-## <span id="page-65-0"></span>**8.2 LAUFZEITKONFIGURATION**
+## Laufzeitkonfiguration
 
 Im einmal vorkommenden Element der <postRuntime> stellen Sie die Werte passend für Ihre Systemumgebung ein. Innerhalb dieses Elements können mehrere Elemente des Typs <unlockCode>, <referenceDatabase> und <postEngine> vorkommen.
-
-<span id="page-65-1"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default        | Bedeutung                                                                                                                                                                                                               |
 |---------------------------|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -105,7 +110,7 @@ Im einmal vorkommenden Element der <postRuntime> stellen Sie die Werte passend f
 | maxMemoryUsageMB •        | Zahl<br>(Default=3584)      | Maximale Größe des temporär verwendeten<br>Speichers (RAM) während des Abgleichs. Der<br>verwendete Speicher wirkt sich unmittelbar<br>auf die Performance aus.                                                                                                   |
 | abortPort                 | Zahl oder "OFF"             | Ein Socketport, der im Batchlauf benutzt<br>werden kann, um über diesen den Batch<br>lauf zu beenden, wenn das magische Wort<br>"TOLERANT"<br>geschickt wird. Soll kein Port<br>verwendet werden, so sollte man hier "OFF"<br>eingeben. Der Standardwert ist 8979 |
 
-<span id="page-66-0"></span>Das Element <proxySetting> enthält die Proxy-Einstellungen für ein <postEngine>-Element. Dieser Abschnitt ist optional, kann aber mehrmals vorkommen.
+Das Element <proxySetting> enthält die Proxy-Einstellungen für ein <postEngine>-Element. Dieser Abschnitt ist optional, kann aber mehrmals vorkommen.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                | Bedeutung                                              |
 |---------------------------|-----------------------------------|--------------------------------------------------------|
@@ -119,7 +124,7 @@ Im einmal vorkommenden Element der <postRuntime> stellen Sie die Werte passend f
 
 #### Tabelle 8.2: Konfigurationselement <proxySetting>
 
-<span id="page-66-1"></span>Das Element <unlockCode> ist zuständig für Ihre Unlockcodes (oder Lizenzschlüssel). Es kann mehrmals vorkommen.
+Das Element <unlockCode> ist zuständig für Ihre Unlockcodes (oder Lizenzschlüssel). Es kann mehrmals vorkommen.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                             |
 |---------------------------|--------------------|---------------------------------------|
@@ -128,7 +133,7 @@ Im einmal vorkommenden Element der <postRuntime> stellen Sie die Werte passend f
 
 Tabelle 8.3: Konfigurationselement <unlockCode>
 
-<span id="page-67-0"></span>Das Element <referenceDatabase> enthält Einstellungen zu den Referenzdaten. Es kann mehrmals vorkommen.
+Das Element <referenceDatabase> enthält Einstellungen zu den Referenzdaten. Es kann mehrmals vorkommen.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                  | Bedeutung                                                                                                                                                              |
 |---------------------------|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -143,9 +148,7 @@ Tabelle 8.3: Konfigurationselement <unlockCode>
 | type •                    | BATCH_INTERACTIVE,<br>FASTCOMPLETION,<br>CERTIFIED,<br>GEOCODING,<br>GEOCODING<br>ARRIVAL_POINT,<br>GEOCODING_PAR<br>CEL_CENTROID,<br>GEOCODING_ROOFTOP,<br>SUPPLEMENTARY,<br>ADDRESS_CO<br>DE_LOOKUP,<br>GEO_ONLY,<br>STAB,<br>AGS,<br>CAMEO,<br>LIST,<br>GEOCODETOADDRESS | Art der Referenzdaten. Siehe auch Abschnitt<br>(Seite<br>'Referenzdaten installieren/aktualisieren'<br>141)     |
 | filepath •                | Pfad                                                                                                                                                                                                                                                                        | Verzeichnis der Referenzdaten. Der Pfad der<br>Referenzdatendatei ist relativ zum Installa<br>tionsverzeichnis. |
 
-Das Element <postEngine> enthält die Einstellungen zu Adressvalidierungs-Engines (siehe Abschnitt *['Cloud-Service für Adressvalidierung'](#page-33-0)* (Seite [26\)](#page-33-0)) Dieser Abschnitt ist optional, kann aber mehrmals vorkommen.
-
-<span id="page-68-0"></span>
+Das Element <postEngine> enthält die Einstellungen zu Adressvalidierungs-Engines (siehe Abschnitt [Cloud-Service für Adressvalidierung](#page-33-0)) Dieser Abschnitt ist optional, kann aber mehrmals vorkommen.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                      |
 |---------------------------|--------------------|------------------------------------------------------------------------------------------------|
@@ -166,8 +169,6 @@ Tabelle 8.5: Konfigurationselement <postEngine>
 
 Die Verbindung zu einem REST-Service kann durch das Element <postEngineRestEndPoint> definiert werden. Ein <postEngineRestEndPoint> kann eine Liste von <parameter> haben. Diese Liste ist spezifisch für die jeweilige Engine.
 
-<span id="page-69-0"></span>
-
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                                                                                                                                    |
 |---------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | id •                      | Zeichenkette       | ID zur Referenzierung dieses Elements                                                                                                                                                                        |
@@ -182,8 +183,6 @@ Für die serviceURL können die folgenden Werte vergeben werden:
 #### — https://us-av.informaticadaas.com/AV6/v1
 
 Weiterhin kann die Verbindung zu einem SOAP-Service (für Legacy Version V4) durch das Element <postEngineSoapEndPoint> definiert werden. Dieser Abschnitt ist optional.
-
-<span id="page-70-1"></span>
 
 | Tabelle 8.7:<br>Konfigurationselement<br><postenginesoapendpoint></postenginesoapendpoint> |                    |                                       |
 |--------------------------------------------------------------------------------------------|--------------------|---------------------------------------|
@@ -212,9 +211,9 @@ Nachfolgend finden Sie eine Beispielkonfiguration für die Basiseinstellungen zu
 
 <img src="data:image/jpeg;base64,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" alt="" style="max-width: 100%;">
 
-## <span id="page-70-0"></span>**8.3 PROJEKTKONFIGURATION**
+## Projektkonfiguration
 
-<span id="page-70-2"></span>Die Projektkonfiguration beschreibt die Ein- und Ausgangsparameter des Batchlaufs für ein spezielles Projekt. Jeder POST Batchlauf kann eine eigene Projektkonfiguration verwenden und somit eigene Einund Ausgangsfelder definieren. Innerhalb der Projektkonfiguration werden die Synonymdaten, die Einund Ausgangsdateien, die Eingangs- und Ausgangsfelder, die Profile und die Bedingungen, nach denen entschieden wird, welcher Output verwendet wird, definiert.
+Die Projektkonfiguration beschreibt die Ein- und Ausgangsparameter des Batchlaufs für ein spezielles Projekt. Jeder POST Batchlauf kann eine eigene Projektkonfiguration verwenden und somit eigene Einund Ausgangsfelder definieren. Innerhalb der Projektkonfiguration werden die Synonymdaten, die Einund Ausgangsdateien, die Eingangs- und Ausgangsfelder, die Profile und die Bedingungen, nach denen entschieden wird, welcher Output verwendet wird, definiert.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                                                                                                                                                                            |
 |---------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -244,11 +243,9 @@ Nachfolgend finden Sie eine Beispielkonfiguration für die Projektkonfiguration.
 Listing 8.2: Beispiel Projektkonfiguration
 ```
 
-## <span id="page-72-0"></span>**8.4 DATENBANKEN**
+## Datenbanken
 
 Im Bereich <database> kann eine Verbindung zu einer Datenbank definiert werden. Das Element wird als Unterelement von <postProject> definiert.
-
-<span id="page-72-1"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                                          | Bedeutung                                                                                                                                                                                                     |
 |---------------------------|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -281,11 +278,9 @@ Nachfolgend finden Sie ein Beispiel für eine Konfiguration einer H2 Datenbank.
 
 1 <database id="db-2" name="myDatabase" type="H2" user="sa" filepath="\$TLDATA/originalData" /> Listing 8.4: Beispielkonfiguration einer H2 Datenbankverbindung
 
-## <span id="page-74-0"></span>**8.5 SYNONYMDATEI**
+## Synonymdatei
 
 Mit dem <synonymFile> Abschnitt wird definiert, wo die Synonyme hinterlegt sind. Dieser Abschnitt ist optional. Wird keine Synonymdatei definiert, so gibt es einen Fehler, wenn einzelne Eingabe- oder Ausgabefelder auf eine Synonymliste verweisen.
-
-<span id="page-74-2"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                                                                  | Bedeutung                                                                                                                           |
 |---------------------------|-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
@@ -297,13 +292,11 @@ Mit dem <synonymFile> Abschnitt wird definiert, wo die Synonyme hinterlegt sind.
 
 #### Tabelle 8.10: Konfigurationselement <synonymFile>
 
-<span id="page-74-1"></span>Der Inhalt der Synonymdatei und die verschiedenen Ersetzungsmodi sind in Abschnitt *['Synonyme'](#page-23-0)* (Seite [16\)](#page-23-0) beschrieben.
+Der Inhalt der Synonymdatei und die verschiedenen Ersetzungsmodi sind in Abschnitt *['Synonyme'](#page-23-0)* (Seite [16\)](#page-23-0) beschrieben.
 
 ## **8.6 AUSNAHMEDATEI**
 
 Im optional einmal vorkommenden Element der <addressExceptionsFile> können Sie eine Datei konfigurieren, in der eine Ausnahmeliste von Adressen definiert ist, die nicht überprüft werden sollen. Eine Beschreibung der Nutzung der Ausnahmedatei finden Sie in Abschnitt *['Ausnahmedatei'](#page-26-0)* (Seite [20\)](#page-26-0) beschrieben.
-
-<span id="page-75-1"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                                                                  | Bedeutung                                                                                                                                                          |
 |---------------------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -320,11 +313,9 @@ Nachfolgend finden Sie eine Beispielkonfiguration für die Basiseinstellungen zu
 
 Listing 8.5: Beispiel Ausnahmedatei
 
-## <span id="page-75-0"></span>**8.7 EINGABEFELDER (DATEI)**
+## Eingabefelder (Datei)
 
 Im Abschnitt <csvFileInput> werden Eingabedateien und ihre Eigenschaften für die Batch-Verarbeitung konfiguriert.
-
-<span id="page-75-2"></span>
 
 | Tabelle 8.12:<br>Konfigurationselement<br><csvfileinput></csvfileinput> |              |                                         |
 |-------------------------------------------------------------------------|--------------|-----------------------------------------|
@@ -340,7 +331,7 @@ Im Abschnitt <csvFileInput> werden Eingabedateien und ihre Eigenschaften für di
 | codepage                  | z.B. ISO8859-1, UTF<br>8, etc. (s.<br>Unterstütz<br>(Seite<br>221))<br>te Codesets<br>(Default=ISO8859-1) | In der Eingabedatei verwendete Zeichenko<br>dierung.                                                                                                                                                                                                            |
 | startline                 | Zahl (Default: 1)                                                                                         | Nummer der ersten Zeile mit Nutzdaten (be<br>ginnend bei 1). Dies kann benutzt werden,<br>um Kopfzeilen zu überspringen.<br>startLine<br>kann auf '0' gesetzt werden, dies ist gleich<br>bedeutend mit '1', d.h. die Datei wird ab der<br>ersten Zeile gelesen. |
 
-<span id="page-76-0"></span>Ein Abschnitt von <csvFileInput> beinhaltet einen oder mehrere Einträge vom Typ <csvInput-Field>, welche die eigentlichen Felder mit ihren Eigenschaften repräsentieren.
+Ein Abschnitt von <csvFileInput> beinhaltet einen oder mehrere Einträge vom Typ <csvInput-Field>, welche die eigentlichen Felder mit ihren Eigenschaften repräsentieren.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                       |
 |---------------------------|--------------------|-----------------------------------------------------------------|
@@ -376,11 +367,9 @@ Beispiel:
 
 Listing 8.6: Beispiel Konfiguration der Eingabefelder
 
-## <span id="page-78-0"></span>**8.8 EINGABEFELDER (DATENBANK)**
+## Eingabefelder (Datenbank)
 
 Im Abschnitt <databaseInput> werden Eingabetabellen in Datenbanken, und ihre Eigenschaften für die Batch-Verarbeitung konfiguriert.
-
-<span id="page-78-1"></span>
 
 | Tabelle 8.14:<br>Konfigurationselement<br><databaseinput></databaseinput> |                    |                                                                                                                          |
 |---------------------------------------------------------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------|
@@ -395,8 +384,6 @@ Im Abschnitt <databaseInput> werden Eingabetabellen in Datenbanken, und ihre Eig
 | whereClause               | Zeichenkette       | Eine Filterbedingung für die Daten in der<br>Eingabetabelle. Bei der Referenzierung einer<br>SQL-Datenbank muss die definierte Bedin<br>gung einer validen WHERE-Clause im SQL<br>Kontext des jeweiligen Datenbank-Typs ent<br>sprechen.                                                                                                                                                  |
 
 Ein Abschnitt von <databaseInput> beinhaltet einen oder mehrere Einträge vom Typ <databaseInputField>, welche die eigentlichen Spalten in der Eingabetabelle mit ihren Eigenschaften repräsentieren.
-
-<span id="page-79-0"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                          |
 |---------------------------|--------------------|--------------------------------------------------------------------|
@@ -433,11 +420,9 @@ Beispiel:
 
 <img src="data:image/jpeg;base64,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" alt="" style="max-width: 100%;">
 
-## <span id="page-81-0"></span>**8.9 AUSGABEFELDER (DATEI)**
+## Ausgabefelder (Datei)
 
 Hier teilen Sie dem Programm mit, welche Felder in der Ausgabe erscheinen. Das eigentliche Mapping, also die Zuweisung der definierten Felder, wird an dieser Stelle noch nicht vorgenommen. Ein Abschnitt von <csvFileOutput> beinhaltet immer einen oder mehrere Einträge von <csvOutputField>, welche die eigentlichen Felder repräsentieren.
-
-<span id="page-81-2"></span><span id="page-81-1"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                                                                                         | Bedeutung                                                                                                                                                                             |
 |---------------------------|------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -490,11 +475,9 @@ Beispiel:
 
 Listing 8.8: Beispielkonfiguration der Ausgabefelder
 
-## <span id="page-83-0"></span>**8.10 AUSGABEFELDER (DATENBANK)**
+## Ausgabefelder (Datenbank)
 
 Hier teilen Sie dem Programm mit, welche Felder in der Ausgabe in einer Datenbanktabelle erscheinen. Das eigentliche Mapping, also die Zuweisung der definierten Felder, wird an dieser Stelle noch nicht vorgenommen. Ein Abschnitt von <databaseOutput> beinhaltet immer einen oder mehrere Einträge von <databaseOutputField>, welche die eigentlichen Felder repräsentieren.
-
-<span id="page-83-1"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                                                    |
 |---------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------|
@@ -511,8 +494,6 @@ Tabelle 8.18: Konfigurationselement <databaseOutput>
 | truncateTable             | Y<br>N*                   | Y = Der Inhalt der Ausgabetabelle wird vor<br>erneuter Batch-Verarbeitung gelöscht. |
 
 #### Tabelle 8.19: Konfigurationselement <databaseOutputField>
-
-<span id="page-84-0"></span>
 
 | • Pflichtfeld | <b>Werte</b><br>* Default                                                                        | Bedeutung                                                                                                                                                                                                                                                                                                       |
 |---------------|--------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -549,11 +530,11 @@ Beispiel:
 
 Listing 8.9: Beispielkonfiguration der Ausgabefelder
 
-## <span id="page-85-0"></span>**8.11 POST-PROFILE**
+## Post-Profile
 
 Jede postalische Validierung benötigt noch zusätzliche Angaben über die Art der Prüfung. Diese Angaben werden in einem (Post-)Profil gespeichert. Ein Projekt kann mehrere Profile enthalten.
 
-<span id="page-85-1"></span>Mit der Einführung der Version 6 der Validierungs-Engine (ab Produktversion 11.0) wurden einige Profilparameter abgelöst, während einige neue dazu kamen. Im Folgenden sind einige Parameter mit "V5\_ONLY" bzw. "V6\_ONLY" gekennzeichnet, um dies zu verdeutlichen. Profilparameter, die nicht zur Version der Validierungs-Engine passen, erzeugen beim Überprüfung der Konfiguration eine Warnung, und werden inhaltlich ignoriert.
+Mit der Einführung der Version 6 der Validierungs-Engine (ab Produktversion 11.0) wurden einige Profilparameter abgelöst, während einige neue dazu kamen. Im Folgenden sind einige Parameter mit "V5\_ONLY" bzw. "V6\_ONLY" gekennzeichnet, um dies zu verdeutlichen. Profilparameter, die nicht zur Version der Validierungs-Engine passen, erzeugen beim Überprüfung der Konfiguration eine Warnung, und werden inhaltlich ignoriert.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default                                | Bedeutung                                                                                                                                                                                                                                     |
 |---------------------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -643,8 +624,6 @@ Tabelle 8.20: Konfigurationselement <postProfile>
 | globalPreferredDescriptor        | DATABASE*<br>LONG<br>SHORT<br>PRESERVE_INPUT                                                                     | Gibt vor, wie die Felder<br>post.*PostDesc<br>und<br>post.*PreDesc, (z.B.<br>post.StreetPreDesc) befüllt werden<br>sollen (nur für einige Länder verfügbar, z.B.<br>Straßenkennzeiochnung "Calle" in Spanien).                                                                                                                                                                                                                                                                                                 |
 | dualAddressPriority<br>(V5_ONLY) | POSTAL_ADMIN*<br>DELIVERY_SERVICE<br>STREET                                                                      | Beinhaltet die Eingabe Straßen- und Post<br>fachinformation, so bestimmt der Parameter,<br>ob die Adresse als Straßenadresse, Postfach<br>adresse oder länderspezifisch validiert wer<br>den soll. Wird in V6 noch nicht unterstützt.                                                                                                                                                                                                                                                                          |
 
-#### KAPITEL 8. KONFIGURATIONSDATEI **TOLERANT** Software
-
 | Attribut<br>• Pflichtfeld            | Werte<br>* Default                                   | Bedeutung                                                                                                                                                                                                                                                                                            |
 |--------------------------------------|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | matchingExtendedArchive<br>(V5_ONLY) | N(=No)*<br>Y(=Yes)                                   | Wenn für ein Land historische Adressen in<br>den Referenzdaten vorliegen (bspw. Südko<br>rea und Japan), dann kann man bei der Va<br>lidierung hiermit erzwingen, dass die aktu<br>ellen Adressen zurückgeliefert werden. Für<br>V6 benutzen Sie bitte stattdessen das Feld<br>matchingAlternatives. |
@@ -661,8 +640,6 @@ Beispiel:
 Listing 8.10: Beispiel Konfiguration des Post-Profiles
 
 Mit dem optionalen <postEnginemap> Abschnitt wird definiert, mit welchen Ländern die in der Laufzeitkonfiguration konfigurierten Adressvalidierungs-Engines genutzt werden. Fehlt dieser Abschnitt, so wird nur die interne Engine verwendet.
-
-<span id="page-97-0"></span>
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                       |  |
 |---------------------------|--------------------|-------------------------------------------------------------------------------------------------|--|
@@ -682,9 +659,9 @@ Beispiel:
 
 Listing 8.11: Beispiel Konfiguration des Post-Engine-Mappings
 
-## <span id="page-98-0"></span>**8.12 FELDZUWEISUNGEN FÜR EINGABEFELDER**
+## Feldzuweisungen für eingabefelder
 
-<span id="page-98-1"></span>Jedes Eingabefeld kann einem oder mehreren internen Feldern zugewiesen werden. Dies geschieht über den Abschnitt <inputFieldmap>.
+Jedes Eingabefeld kann einem oder mehreren internen Feldern zugewiesen werden. Dies geschieht über den Abschnitt <inputFieldmap>.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                   |
 |---------------------------|--------------------|-------------------------------------------------------------|
@@ -693,7 +670,7 @@ Listing 8.11: Beispiel Konfiguration des Post-Engine-Mappings
 
 #### Tabelle 8.22: Konfigurationselement <inputFieldmap>
 
-<span id="page-98-2"></span>Jeder <inputFieldmap>-Abschnitt kann ein oder mehrere <inputFieldmapItem>-Elemente enthalten, die angeben, welche Eingabefelder den internen Feldern zugewiesen werden.
+Jeder <inputFieldmap>-Abschnitt kann ein oder mehrere <inputFieldmapItem>-Elemente enthalten, die angeben, welche Eingabefelder den internen Feldern zugewiesen werden.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                           |
 |---------------------------|--------------------|-----------------------------------------------------------------------------------------------------|
@@ -731,15 +708,13 @@ Listing 8.11: Beispiel Konfiguration des Post-Engine-Mappings
 
 Listing 8.12: Beispiel Feldzuweisung der Eingabefelder
 
-<span id="page-99-0"></span>Wie aus dem Beispiel ersichtlich wird, ist es möglich, mehrere Eingabefelder auf dasselbe interne Feld zu kopieren. Dazu muss das interne Feld nur mehrmals in der <inputFieldmap> auftauchen. Die Eingangswerte werden dann durch ein Leerzeichen getrennt hintereinander in das Prüffeld kopiert.
+Wie aus dem Beispiel ersichtlich wird, ist es möglich, mehrere Eingabefelder auf dasselbe interne Feld zu kopieren. Dazu muss das interne Feld nur mehrmals in der <inputFieldmap> auftauchen. Die Eingangswerte werden dann durch ein Leerzeichen getrennt hintereinander in das Prüffeld kopiert.
 
 <sup>2</sup> Nur TOLERANT Match
 
 ## **8.13 GENERIERTE AUSGABEFELDER**
 
 Jedes Projekt kann kein, ein oder mehrere <generatedFields>-Abschnitte verwenden. Der Abschnitt *['Generierte Ausgabefelder'](#page-31-0)* (Seite [24\)](#page-31-0) beschreibt das Konzept der generierten Felder.
-
-<span id="page-100-1"></span>
 
 | Tabelle 8.24:<br>Konfigurationselement<br><generatedfield></generatedfield> |                                       |                                                                                                                                               |
 |-----------------------------------------------------------------------------|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -752,11 +727,9 @@ Jedes Projekt kann kein, ein oder mehrere <generatedFields>-Abschnitte verwenden
 | type                                                                        | FREEMARKER•<br>GROOVY<br>JAVASCRIPT   | Art des Templates                                                                                                                             |
 | inputfields                                                                 | Zeichenkette mit Komma<br>separiert   | Felder, die das Template intern verwendet.                                                                                                    |
 
-## <span id="page-100-0"></span>**8.14 FELDZUWEISUNGEN FÜR AUSGABEFELDER**
+## Feldzuweisungen für ausgabefelder
 
 Jedem Feld der Ausgabe kann ein Eingabefeld oder ein internes Ergebnisfeld zugeordnet werden, damit seine Datenherkunft klar bestimmt ist. Wird einem Ausgabefeld nichts zugeordnet, so bleibt es leer.
-
-<span id="page-100-2"></span>
 
 | Tabelle 8.25:<br>Konfigurationselement<br><outputfieldmap></outputfieldmap> |                    |                                                         |
 |-----------------------------------------------------------------------------|--------------------|---------------------------------------------------------|
@@ -765,8 +738,6 @@ Jedem Feld der Ausgabe kann ein Eingabefeld oder ein internes Ergebnisfeld zugeo
 | outputRef •                                                                 | Zeichenkette       | Verweis auf das zu verwendende<br><*Output>-<br>Element |
 
 Jeder <outputFieldmap>-Abschnitt kann ein oder mehrere <outputFieldmapItem>-Elemente enthalten.
-
-<span id="page-101-1"></span>
 
 | Tabelle 8.26:<br>Konfigurationselement<br><outputfieldmapitem></outputfieldmapitem> |                    |                                                                                                         |
 |-------------------------------------------------------------------------------------|--------------------|---------------------------------------------------------------------------------------------------------|
@@ -800,9 +771,9 @@ Beispiel:
 9 </ outputFieldmap >
 ```
 
-<span id="page-101-0"></span>Listing 8.13: Beispiel Feldzuweisung der Ausgabefelder
+Listing 8.13: Beispiel Feldzuweisung der Ausgabefelder
 
-## **8.15 MEHRERE AUSGABEDATEIEN**
+## Mehrere Ausgabedateien
 
 Innerhalb eines Projekts besteht die Möglichkeit, abhängig von den Inhalten interner Felder und von Eingabefeldern mit Hilfe des <outputSwitch>-Elements unterschiedliche <outputFieldmap>-Elemente anzusteuern. Bei Nichtverwendung des <outputSwitch>-Elements wird die erste zur Verfügung stehende <outputFieldmap> verwendet.
 
@@ -810,16 +781,12 @@ Um dem Programm mitzuteilen, welche <outputFieldmap> verwendet werden soll, benu
 
 <condition>-Elemente können geschachtelt werden. Hat ein <condition>-Element das Attribut type auf "OR" gesetzt, so sind die darin enthaltenen Bedingungen ODER-verknüpft. Hat ein <condition>- Element das Attribut type auf "AND" gesetzt, so sind die darin enthaltenen Bedingungen UNDverknüpft. Ist das Attribut type nicht gesetzt (oder explizit auf "VALUE") gesetzt, so kann diese Bedingung keine geschachtelten Elemente enthalten und stellt eine reinen Test auf Gleichheit dar. Ist type auf "REGEXP" gesetzt, so wird der Wert mit einem regulären Ausdruck verglichen.
 
-<span id="page-102-0"></span>
-
 | Tabelle 8.27:<br>Konfigurationselement<br><outputswitch></outputswitch> |                    |                               |  |
 |-------------------------------------------------------------------------|--------------------|-------------------------------|--|
 | Attribut<br>• Pflichtfeld                                               | Werte<br>* Default | Bedeutung                     |  |
 | id •                                                                    | Zeichenkette       | Referenz für diesen Abschnitt |  |
 
 Das Element <outputSwitch> dient zur Kapselung der einzelnen Bedingungen, es enthält lediglich eine ID zur Benennung.
-
-<span id="page-102-1"></span>
 
 | Tabelle 8.28:<br>Konfigurationselement<br><outputto></outputto> |                    |                     |  |
 |-----------------------------------------------------------------|--------------------|---------------------|--|
@@ -832,7 +799,7 @@ Das Element <outputSwitch> dient zur Kapselung der einzelnen Bedingungen, es ent
 |---------------------------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | outputFieldmapRef •       | Zeichenkette       | Verweis auf die outputFieldmap, welche ver<br>wendet wird, falls die Bedingungen in diesem<br><outputto>-Element zutreffen</outputto> |
 
-<span id="page-103-0"></span>Das Element <outputTo> repräsentiert einen ansteuerbaren Output. Es enthält Unterelemente, die die eigentlichen Bedingungen, die zur Wahl dieses Outputs führen, beinhalten.
+Das Element <outputTo> repräsentiert einen ansteuerbaren Output. Es enthält Unterelemente, die die eigentlichen Bedingungen, die zur Wahl dieses Outputs führen, beinhalten.
 
 | Attribut<br>• Pflichtfeld | Werte<br>* Default | Bedeutung                                                                                                                                                             |
 |---------------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
